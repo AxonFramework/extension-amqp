@@ -29,8 +29,10 @@
 
     <name>Axon Framework AMQP Extension - Spring Boot Support</name>
     <description>
-        Module providing support for auto configuration of the Kafka Axon Framework extension through Spring Boot.
+        Module providing support for auto configuration of the AMQP Axon Framework extension through Spring Boot.
     </description>
+
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -90,7 +92,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>org.axonframework.extensions.amqp.springboot.autoconfigure</Automatic-Module-Name>
+                            <Automatic-Module-Name>org.axonframework.extensions.amqp.springboot</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
