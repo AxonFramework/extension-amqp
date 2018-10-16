@@ -16,7 +16,7 @@
 
 package org.axonframework.extensions.amqpboot.autoconfig;
 
-import org.axonframework.boot.autoconfig.AxonAutoConfiguration;
+import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;

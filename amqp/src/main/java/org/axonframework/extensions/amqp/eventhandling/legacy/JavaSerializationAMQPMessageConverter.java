@@ -17,7 +17,6 @@
 package org.axonframework.extensions.amqp.eventhandling.legacy;
 
 import com.rabbitmq.client.AMQP;
-import org.axonframework.amqp.eventhandling.*;
 import org.axonframework.common.Assert;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessage;

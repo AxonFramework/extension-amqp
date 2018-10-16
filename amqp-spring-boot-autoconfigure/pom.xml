@@ -24,7 +24,7 @@
     </parent>
 
     <artifactId>axon-amqp-spring-boot-autoconfigure</artifactId>
-    <name>Axon Framework AMQP Extension Spring Boot Support</name>
+    <name>Axon Framework AMQP Extension - Spring Boot Support</name>
 
     <dependencies>
         <dependency>
@@ -41,7 +41,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring.boot.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>

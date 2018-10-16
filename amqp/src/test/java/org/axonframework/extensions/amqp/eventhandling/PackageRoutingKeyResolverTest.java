@@ -47,7 +47,7 @@ public class PackageRoutingKeyResolverTest {
         EventMessage mockMessage = mock(EventMessage.class);
         when(mockMessage.getPayloadType()).thenReturn(RoutingKeyResolver.class);
         String actual = testSubject.resolveRoutingKey(mockMessage);
-        assertEquals("org.axonframework.amqp.eventhandling", actual);
+        assertEquals("org.axonframework.extensions.amqp.eventhandling", actual);
         // make sure only the payload type method is invoked
         verify(mockMessage).getPayloadType();
         verifyNoMoreInteractions(mockMessage);

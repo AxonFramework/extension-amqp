@@ -25,7 +25,7 @@
 
     <artifactId>axon-amqp</artifactId>
 
-    <name>Axon Framework AMQP</name>
+    <name>Axon Framework AMQP Extension</name>
     <description>This module contains implementations of several components, connecting them to an AMQP compatible
         message broker.
     </description>
@@ -53,7 +53,6 @@
             <artifactId>axon-messaging</artifactId>
             <version>${axon.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
@@ -71,17 +70,5 @@
             <version>${spring.version}</version>
             <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 </project>

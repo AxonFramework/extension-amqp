@@ -16,8 +16,8 @@
 
 package org.axonframework.extensions.amqp.eventhandling.legacy;
 
+import org.axonframework.eventhandling.DomainEventMessage;
 import org.axonframework.eventhandling.EventMessage;
-import org.axonframework.eventsourcing.DomainEventMessage;
 
 /**
  * Enumeration of supported Message Types by the {@link EventMessageWriter} and {@link EventMessageReader}.
