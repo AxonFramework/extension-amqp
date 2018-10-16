@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.extensions.amqpboot.autoconfig;
+package org.axonframework.extensions.amqp.autoconfig;
 
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
@@ -37,6 +37,7 @@ import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -48,13 +49,13 @@ import java.lang.reflect.Field;
 import static org.axonframework.common.ReflectionUtils.getFieldValue;
 import static org.junit.Assert.*;
 
-@ContextConfiguration
+@SpringBootTest
 @EnableAutoConfiguration(exclude = {JmxAutoConfiguration.class, WebClientAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class, DataSourceAutoConfiguration.class})
 @RunWith(SpringRunner.class)
 @EnableConfigurationProperties
 @EnableRabbit
-public class AxonAutoConfigurationWithAMQPAndEventSerializer {
+public class AxonAutoConfigurationWithAMQPAndEventSerializerTest {
 
     @Autowired
     private ApplicationContext applicationContext;

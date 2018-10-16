@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.extensions.amqpboot.autoconfig;
+package org.axonframework.extensions.amqp.autoconfig;
 
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublisher;
@@ -32,19 +32,20 @@ import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertNotNull;
 
-@ContextConfiguration
+@SpringBootTest
 @EnableAutoConfiguration(exclude = {JmxAutoConfiguration.class, WebClientAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class, DataSourceAutoConfiguration.class})
 @RunWith(SpringRunner.class)
-@EnableConfigurationProperties
 @EnableRabbit
-public class AxonAutoConfigurationWithAMQP {
+public class AxonAutoConfigurationWithAMQPTest {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -58,11 +59,12 @@ public class AxonAutoConfigurationWithAMQP {
     public void testContextInitialization() {
         assertNotNull(applicationContext);
 
-        assertNotNull(applicationContext.getBean(CommandBus.class));
-        assertNotNull(applicationContext.getBean(EventBus.class));
-        assertNotNull(applicationContext.getBean(CommandGateway.class));
-        assertNotNull(applicationContext.getBean(Serializer.class));
         assertNotNull(applicationContext.getBean(AMQPMessageConverter.class));
         assertNotNull(applicationContext.getBean(SpringAMQPPublisher.class));
+    }
+
+    @Configuration
+    public static class Context {
+        // Needed to correctly start up Spring Boot auto configuration test
     }
 }

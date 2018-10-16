@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.axonframework.extensions.amqpboot.autoconfig.AMQPAutoConfiguration
+  org.axonframework.extensions.amqp.autoconfig.AMQPAutoConfiguration

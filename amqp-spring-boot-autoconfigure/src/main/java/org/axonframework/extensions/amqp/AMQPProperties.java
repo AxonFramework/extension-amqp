@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.extensions.amqpboot;
+package org.axonframework.extensions.amqp;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

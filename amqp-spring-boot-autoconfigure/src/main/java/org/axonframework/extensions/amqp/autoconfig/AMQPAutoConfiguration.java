@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.axonframework.extensions.amqpboot.autoconfig;
+package org.axonframework.extensions.amqp.autoconfig;
 
 import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
 import org.axonframework.eventhandling.EventBus;
@@ -23,7 +23,7 @@ import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConvert
 import org.axonframework.extensions.amqp.eventhandling.PackageRoutingKeyResolver;
 import org.axonframework.extensions.amqp.eventhandling.RoutingKeyResolver;
 import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublisher;
-import org.axonframework.extensions.amqpboot.AMQPProperties;
+import org.axonframework.extensions.amqp.AMQPProperties;
 import org.axonframework.serialization.Serializer;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
