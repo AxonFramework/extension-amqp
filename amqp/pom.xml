@@ -15,7 +15,9 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.axonframework.extensions.amqp</groupId>
@@ -26,8 +28,9 @@
     <artifactId>axon-amqp</artifactId>
 
     <name>Axon Framework AMQP Extension</name>
-    <description>This module contains implementations of several components, connecting them to an AMQP compatible
-        message broker.
+    <description>
+        This module contains implementations of several components, connecting them to an AMQP compatible message
+        broker.
     </description>
 
     <packaging>jar</packaging>
@@ -53,17 +56,20 @@
             <artifactId>axon-messaging</artifactId>
             <version>${axon.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.rabbitmq</groupId>
             <artifactId>amqp-client</artifactId>
             <version>${rabbitmq.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
             <version>1.7.4.RELEASE</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>

@@ -31,7 +31,7 @@
 
     <name>Axon Framework - AMQP Extension</name>
     <description>
-         Extension for Axon Framework that provides connectors to AMQP 0.9 Message Brokers
+         Extension for Axon Framework that provides connectors to AMQP 0.9 Message Brokers.
     </description>
 
     <inceptionYear>2010</inceptionYear>
@@ -44,7 +44,7 @@
     </licenses>
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/AxonFramework/extension-amqp</url>
+        <url>https://github.com/AxonFramework/extension-amqp/issues</url>
     </issueManagement>
 
     <profiles>
@@ -120,7 +120,7 @@
     </properties>
 
     <dependencies>
-        <!-- test dependencies -->
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>

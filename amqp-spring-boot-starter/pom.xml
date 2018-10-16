@@ -16,13 +16,13 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starters</artifactId>
-        <version>1.5.10.RELEASE</version>
+        <version>1.5.7.RELEASE</version>
         <relativePath />
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.axonframework.extensions.amqp</groupId>
     <artifactId>axon-amqp-spring-boot-starter</artifactId>
@@ -44,7 +44,7 @@
     </licenses>
     <issueManagement>
         <system>GitHub</system>
-        <url>http://github.com/AxonFramework/extension-amqp</url>
+        <url>https://github.com/AxonFramework/extension-amqp/issues</url>
     </issueManagement>
 
     <dependencies>
@@ -53,6 +53,7 @@
             <artifactId>axon-messaging</artifactId>
             <version>4.0-RC1</version>
         </dependency>
+
         <dependency>
             <groupId>org.axonframework.extensions.amqp</groupId>
             <artifactId>axon-amqp-spring-boot-autoconfigure</artifactId>
