@@ -51,12 +51,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
-            <version>4.0-RC1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.axonframework.extensions.amqp</groupId>
             <artifactId>axon-amqp-spring-boot-autoconfigure</artifactId>
             <version>${project.version}</version>
