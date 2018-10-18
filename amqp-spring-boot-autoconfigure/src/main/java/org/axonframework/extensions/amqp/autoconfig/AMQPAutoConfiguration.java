@@ -16,7 +16,6 @@
 
 package org.axonframework.extensions.amqp.autoconfig;
 
-import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
@@ -25,6 +24,8 @@ import org.axonframework.extensions.amqp.eventhandling.RoutingKeyResolver;
 import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublisher;
 import org.axonframework.extensions.amqp.AMQPProperties;
 import org.axonframework.serialization.Serializer;
+import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
+import org.axonframework.springboot.autoconfig.InfraConfiguration;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,7 +42,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(SpringAMQPPublisher.class)
 @EnableConfigurationProperties(AMQPProperties.class)
-@AutoConfigureAfter({RabbitAutoConfiguration.class, AxonAutoConfiguration.class})
+@AutoConfigureAfter({RabbitAutoConfiguration.class, AxonAutoConfiguration.class, InfraConfiguration.class})
 public class AMQPAutoConfiguration {
 
     @Autowired
