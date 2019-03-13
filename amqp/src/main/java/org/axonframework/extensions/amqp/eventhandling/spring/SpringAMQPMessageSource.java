@@ -24,7 +24,7 @@ import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConvert
 import org.axonframework.messaging.SubscribableMessageSource;
 import org.axonframework.serialization.Serializer;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
+import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 
 import java.util.Collections;
 import java.util.List;
