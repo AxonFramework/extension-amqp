@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2010-2016. Axon Framework
+ * Copyright (c) 2010-2020. Axon Framework
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,15 +18,18 @@ package org.axonframework.extensions.amqp.eventhandling.spring;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ShutdownSignalException;
+import org.axonframework.common.Assert;
+import org.axonframework.common.AxonConfigurationException;
+import org.axonframework.common.Registration;
+import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessage;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.PackageRoutingKeyResolver;
 import org.axonframework.extensions.amqp.eventhandling.RoutingKeyResolver;
-import org.axonframework.common.Assert;
-import org.axonframework.common.AxonConfigurationException;
-import org.axonframework.common.Registration;
-import org.axonframework.eventhandling.EventMessage;
+import org.axonframework.lifecycle.Phase;
+import org.axonframework.lifecycle.ShutdownHandler;
+import org.axonframework.lifecycle.StartHandler;
 import org.axonframework.messaging.EventPublicationFailedException;
 import org.axonframework.messaging.SubscribableMessageSource;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
@@ -85,15 +88,19 @@ public class SpringAMQPPublisher implements InitializingBean, ApplicationContext
     }
 
     /**
-     * Subscribes this publisher to the messageSource provided during initialization.
+     * Subscribes this publisher to the messageSource provided during initialization. Upon start up of an application,
+     * this method will be invoked in the {@link Phase#INBOUND_EVENT_CONNECTORS} phase.
      */
+    @StartHandler(phase = Phase.INBOUND_EVENT_CONNECTORS)
     public void start() {
         eventBusRegistration = messageSource.subscribe(this::send);
     }
 
     /**
-     * Shuts down this component and unsubscribes it from its messageSource.
+     * Shuts down this component and unsubscribes it from its messageSource. Upon shutdown of an application, this
+     * method will be invoked in the {@link Phase#INBOUND_EVENT_CONNECTORS} phase.
      */
+    @ShutdownHandler(phase = Phase.INBOUND_EVENT_CONNECTORS)
     public void shutDown() {
         if (eventBusRegistration != null) {
             eventBusRegistration.cancel();
