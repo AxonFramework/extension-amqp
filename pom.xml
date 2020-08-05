@@ -19,7 +19,7 @@
 
     <groupId>org.axonframework.extensions.amqp</groupId>
     <artifactId>axon-amqp-parent</artifactId>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>4.5-SNAPSHOT</version>
     <modules>
         <module>amqp</module>
         <module>amqp-spring-boot-autoconfigure</module>
