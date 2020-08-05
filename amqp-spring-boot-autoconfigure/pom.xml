@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.axonframework.extensions.amqp</groupId>
         <artifactId>axon-amqp-parent</artifactId>
-        <version>4.4</version>
+        <version>4.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>axon-amqp-spring-boot-autoconfigure</artifactId>
