@@ -2,15 +2,15 @@ package org.axonframework.extensions.amqp.eventhandling.spring;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.GetResponse;
+import org.axonframework.eventhandling.EventMessage;
+import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessage;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
-import org.axonframework.eventhandling.EventMessage;
-import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.xml.XStreamSerializer;
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.FanoutExchange;
@@ -25,19 +25,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage;
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration test for Spring AMQP approach.
+ *
+ * @author Allard Buijze
+ * TODO add test containers
+ */
 @ContextConfiguration(classes = SpringAMQPIntegrationTest.Context.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-public class SpringAMQPIntegrationTest {
+@ExtendWith(SpringExtension.class)
+class SpringAMQPIntegrationTest {
 
     @Autowired
     private SimpleMessageListenerContainer listenerContainer;
@@ -54,19 +59,15 @@ public class SpringAMQPIntegrationTest {
     @Autowired
     private ConnectionFactory connectionFactory;
 
-    @Before
-    public void setUp() {
-        try {
-            amqpAdmin.declareQueue(new Queue("testQueue", false, false, true));
-            amqpAdmin.declareExchange(new FanoutExchange("testExchange", false, true));
-            amqpAdmin.declareBinding(new Binding("testQueue", Binding.DestinationType.QUEUE, "testExchange", "", null));
-        } catch (Exception e) {
-            assumeNoException(e);
-        }
+    @BeforeEach
+    void setUp() {
+        amqpAdmin.declareQueue(new Queue("testQueue", false, false, true));
+        amqpAdmin.declareExchange(new FanoutExchange("testExchange", false, true));
+        amqpAdmin.declareBinding(new Binding("testQueue", Binding.DestinationType.QUEUE, "testExchange", "", null));
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         try {
             listenerContainer.stop();
             amqpAdmin.deleteExchange("testExchange");
@@ -78,8 +79,7 @@ public class SpringAMQPIntegrationTest {
 
     @DirtiesContext
     @Test
-    public void testReadFromAMQP() throws Exception {
-
+    void testReadFromAMQP() throws Exception {
         listenerContainer.setMessageListener(springAMQPMessageSource);
         CountDownLatch cdl = new CountDownLatch(100);
         springAMQPMessageSource.subscribe(em -> em.forEach(m -> cdl.countDown()));
@@ -104,7 +104,7 @@ public class SpringAMQPIntegrationTest {
 
     @DirtiesContext
     @Test
-    public void testPublishMessagesFromEventBus() throws Exception {
+    void testPublishMessagesFromEventBus() throws Exception {
         SimpleEventBus messageSource = SimpleEventBus.builder().build();
         SpringAMQPPublisher publisher = new SpringAMQPPublisher(messageSource);
         publisher.setConnectionFactory(connectionFactory);
@@ -125,14 +125,14 @@ public class SpringAMQPIntegrationTest {
         }
     }
 
-    private EventMessage readMessage(Channel channel) throws IOException {
+    private EventMessage<?> readMessage(Channel channel) throws IOException {
         GetResponse message = channel.basicGet("testQueue", true);
-        assertNotNull("Expected message on the queue", message);
+        assertNotNull(message, "Expected message on the queue");
         return messageConverter.readAMQPMessage(message.getBody(), message.getProps().getHeaders()).orElse(null);
     }
 
     @Configuration
-    public static class Context {
+    static class Context {
 
         @Bean
         public SpringAMQPMessageSource springAMQPMessageSource() {

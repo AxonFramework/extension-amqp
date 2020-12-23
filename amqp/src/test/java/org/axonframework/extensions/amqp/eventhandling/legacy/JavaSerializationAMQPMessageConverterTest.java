@@ -6,24 +6,27 @@ import org.axonframework.eventhandling.GenericDomainEventMessage;
 import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessage;
 import org.axonframework.messaging.MetaData;
-import org.axonframework.serialization.xml.XStreamSerializer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.axonframework.extensions.amqp.eventhandling.utils.TestSerializer.secureXStreamSerializer;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JavaSerializationAMQPMessageConverterTest {
+/**
+ * Test class validating the {@link JavaSerializationAMQPMessageConverter}.
+ *
+ * @author Allard Buijze
+ */
+class JavaSerializationAMQPMessageConverterTest {
 
     private JavaSerializationAMQPMessageConverter testSubject;
 
-    @Before
-    public void setUp() {
-        testSubject = new JavaSerializationAMQPMessageConverter(XStreamSerializer.builder().build());
+    @BeforeEach
+    void setUp() {
+        testSubject = new JavaSerializationAMQPMessageConverter(secureXStreamSerializer());
     }
 
     @Test
-    public void testWriteAndReadEventMessage() {
+    void testWriteAndReadEventMessage() {
         EventMessage<?> eventMessage = GenericEventMessage.asEventMessage("SomePayload")
                                                           .withMetaData(MetaData.with("key", "value"));
         AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
@@ -39,7 +42,7 @@ public class JavaSerializationAMQPMessageConverterTest {
     }
 
     @Test
-    public void testWriteAndReadDomainEventMessage() {
+    void testWriteAndReadDomainEventMessage() {
         DomainEventMessage<?> eventMessage = new GenericDomainEventMessage<>(
                 "Stub", "1234", 1L, "Payload", MetaData.with("key", "value")
         );
@@ -55,8 +58,8 @@ public class JavaSerializationAMQPMessageConverterTest {
         assertEquals(eventMessage.getPayloadType(), actualResult.getPayloadType());
         assertEquals(eventMessage.getTimestamp(), actualResult.getTimestamp());
         assertEquals(
-                eventMessage.getAggregateIdentifier(), ((DomainEventMessage) actualResult).getAggregateIdentifier()
+                eventMessage.getAggregateIdentifier(), ((DomainEventMessage<?>) actualResult).getAggregateIdentifier()
         );
-        assertEquals(eventMessage.getSequenceNumber(), ((DomainEventMessage) actualResult).getSequenceNumber());
+        assertEquals(eventMessage.getSequenceNumber(), ((DomainEventMessage<?>) actualResult).getSequenceNumber());
     }
 }

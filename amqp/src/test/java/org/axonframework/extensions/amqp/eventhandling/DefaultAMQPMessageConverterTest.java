@@ -16,37 +16,39 @@
 
 package org.axonframework.extensions.amqp.eventhandling;
 
-import org.axonframework.eventhandling.EventMessage;
-import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.eventhandling.DomainEventMessage;
+import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.GenericDomainEventMessage;
+import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.messaging.Headers;
 import org.axonframework.messaging.MetaData;
-import org.axonframework.serialization.xml.XStreamSerializer;
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.axonframework.extensions.amqp.eventhandling.utils.TestSerializer.secureXStreamSerializer;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Test class validating the {@link DefaultAMQPMessageConverter}.
+ *
  * @author Allard Buijze
  * @author Nakul Mishra
  */
-public class DefaultAMQPMessageConverterTest {
+class DefaultAMQPMessageConverterTest {
 
     private DefaultAMQPMessageConverter testSubject;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         testSubject = DefaultAMQPMessageConverter.builder()
-                                                 .serializer(XStreamSerializer.builder().build())
+                                                 .serializer(secureXStreamSerializer())
                                                  .build();
     }
 
     @Test
-    public void testWriteAndReadEventMessage() {
+    void testWriteAndReadEventMessage() {
         EventMessage<?> eventMessage = GenericEventMessage.asEventMessage("SomePayload")
                                                           .withMetaData(MetaData.with("key", "value"));
         AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
@@ -63,7 +65,7 @@ public class DefaultAMQPMessageConverterTest {
     }
 
     @Test
-    public void testMessageIgnoredIfNotAxonMessageIdPresent() {
+    void testMessageIgnoredIfNotAxonMessageIdPresent() {
         EventMessage<?> eventMessage = GenericEventMessage.asEventMessage("SomePayload")
                                                           .withMetaData(MetaData.with("key", "value"));
         AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
@@ -74,7 +76,7 @@ public class DefaultAMQPMessageConverterTest {
     }
 
     @Test
-    public void testMessageIgnoredIfNotAxonMessageTypePresent() {
+    void testMessageIgnoredIfNotAxonMessageTypePresent() {
         EventMessage<?> eventMessage = GenericEventMessage.asEventMessage("SomePayload")
                                                           .withMetaData(MetaData.with("key", "value"));
         AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
@@ -85,7 +87,7 @@ public class DefaultAMQPMessageConverterTest {
     }
 
     @Test
-    public void testWriteAndReadDomainEventMessage() {
+    void testWriteAndReadDomainEventMessage() {
         DomainEventMessage<?> eventMessage =
                 new GenericDomainEventMessage<>("Stub", "1234", 1L, "Payload", MetaData.with("key", "value"));
         AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
@@ -104,8 +106,8 @@ public class DefaultAMQPMessageConverterTest {
         assertEquals(eventMessage.getPayloadType(), actualResult.getPayloadType());
         assertEquals(eventMessage.getTimestamp(), actualResult.getTimestamp());
         assertEquals(eventMessage.getAggregateIdentifier(),
-                     ((DomainEventMessage) actualResult).getAggregateIdentifier());
-        assertEquals(eventMessage.getType(), ((DomainEventMessage) actualResult).getType());
-        assertEquals(eventMessage.getSequenceNumber(), ((DomainEventMessage) actualResult).getSequenceNumber());
+                     ((DomainEventMessage<?>) actualResult).getAggregateIdentifier());
+        assertEquals(eventMessage.getType(), ((DomainEventMessage<?>) actualResult).getType());
+        assertEquals(eventMessage.getSequenceNumber(), ((DomainEventMessage<?>) actualResult).getSequenceNumber());
     }
 }

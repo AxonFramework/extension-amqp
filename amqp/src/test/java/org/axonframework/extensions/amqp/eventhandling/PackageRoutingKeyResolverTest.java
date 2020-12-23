@@ -18,33 +18,35 @@ package org.axonframework.extensions.amqp.eventhandling;
 
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.GenericEventMessage;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
+ * Test class validating the {@link PackageRoutingKeyResolver}.
+ *
  * @author Allard Buijze
  */
-public class PackageRoutingKeyResolverTest {
+class PackageRoutingKeyResolverTest {
 
     private PackageRoutingKeyResolver testSubject;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         testSubject = new PackageRoutingKeyResolver();
     }
 
     @Test
-    public void testPackageIsReturned() {
+    void testPackageIsReturned() {
         String actual = testSubject.resolveRoutingKey(new GenericEventMessage<>(new Object()));
         assertEquals("java.lang", actual);
     }
 
     @Test
-    public void testOnlyPayloadTypeIsUsed() {
-        EventMessage mockMessage = mock(EventMessage.class);
+    void testOnlyPayloadTypeIsUsed() {
+        //noinspection unchecked
+        EventMessage<RoutingKeyResolver> mockMessage = mock(EventMessage.class);
         when(mockMessage.getPayloadType()).thenReturn(RoutingKeyResolver.class);
         String actual = testSubject.resolveRoutingKey(mockMessage);
         assertEquals("org.axonframework.extensions.amqp.eventhandling", actual);

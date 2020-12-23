@@ -16,18 +16,17 @@
 
 package org.axonframework.extensions.amqp.autoconfig;
 
-import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
-import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
-import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublisher;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.serialization.JavaSerializer;
+import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
+import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
+import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublisher;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.xml.XStreamSerializer;
 import org.axonframework.spring.config.AxonConfiguration;
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,33 +39,35 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.reflect.Field;
 
 import static org.axonframework.common.ReflectionUtils.getFieldValue;
-import static org.junit.Assert.*;
+import static org.axonframework.extensions.amqp.autoconfig.utils.TestSerializer.secureXStreamSerializer;
+import static org.junit.jupiter.api.Assertions.*;
 
+// TODO: 23-12-20 Combine auto config tests into one test class
+@EnableRabbit
+@EnableConfigurationProperties
 @SpringBootTest
 @EnableAutoConfiguration(exclude = {JmxAutoConfiguration.class, WebClientAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class, DataSourceAutoConfiguration.class})
-@RunWith(SpringRunner.class)
-@EnableConfigurationProperties
-@EnableRabbit
-public class AxonAutoConfigurationWithAMQPAndEventSerializerTest {
+@ExtendWith(SpringExtension.class)
+class AxonAutoConfigurationWithAMQPAndEventSerializerTest {
 
     @Autowired
     private ApplicationContext applicationContext;
 
-    @BeforeClass
-    public static void setUp() {
+    @BeforeAll
+    static void setUp() {
         System.setProperty("axon.amqp.exchange", "test");
     }
 
     @Test
-    public void testContextInitialization() throws Exception {
+    void testContextInitialization() throws Exception {
         assertNotNull(applicationContext);
 
         assertNotNull(applicationContext.getBean(CommandBus.class));
@@ -84,24 +85,24 @@ public class AxonAutoConfigurationWithAMQPAndEventSerializerTest {
 
         assertNotNull(applicationContext.getBean(SpringAMQPPublisher.class));
 
-        assertEquals(JavaSerializer.class, applicationContext.getBean(Serializer.class).getClass());
+        assertEquals(XStreamSerializer.class, applicationContext.getBean(Serializer.class).getClass());
         assertEquals(XStreamSerializer.class,
                      applicationContext.getBean("myEventSerializer", Serializer.class).getClass());
     }
 
-    @org.springframework.context.annotation.Configuration
-    public static class Configuration {
+    @Configuration
+    static class Context {
 
         @Bean
         @Primary
         public Serializer mySerializer() {
-            return JavaSerializer.builder().build();
+            return secureXStreamSerializer();
         }
 
         @Bean
         @Qualifier("eventSerializer")
         public Serializer myEventSerializer() {
-            return XStreamSerializer.builder().build();
+            return secureXStreamSerializer();
         }
     }
 }

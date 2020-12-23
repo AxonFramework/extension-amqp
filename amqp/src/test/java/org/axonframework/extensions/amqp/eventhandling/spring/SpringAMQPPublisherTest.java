@@ -29,7 +29,7 @@ import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.serialization.SerializedMetaData;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.SimpleSerializedObject;
-import org.junit.*;
+import org.junit.jupiter.api.*;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 
@@ -37,13 +37,15 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
+ * Test class validating the {@link SpringAMQPPublisher}.
+ *
  * @author Allard Buijze
  */
-public class SpringAMQPPublisherTest {
+class SpringAMQPPublisherTest {
 
     private SpringAMQPPublisher testSubject;
 
@@ -51,8 +53,8 @@ public class SpringAMQPPublisherTest {
     private ConnectionFactory connectionFactory;
     private Serializer serializer;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         eventBus = SimpleEventBus.builder().build();
         connectionFactory = mock(ConnectionFactory.class);
         serializer = mock(Serializer.class);
@@ -68,8 +70,8 @@ public class SpringAMQPPublisherTest {
         testSubject.start();
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         while (CurrentUnitOfWork.isStarted()) {
             CurrentUnitOfWork.get().rollback();
         }
@@ -77,7 +79,7 @@ public class SpringAMQPPublisherTest {
     }
 
     @Test
-    public void testSendMessage_NoUnitOfWork() throws Exception {
+    void testSendMessage_NoUnitOfWork() throws Exception {
         Connection connection = mock(Connection.class);
         when(connectionFactory.createConnection()).thenReturn(connection);
         Channel transactionalChannel = mock(Channel.class);
@@ -101,7 +103,7 @@ public class SpringAMQPPublisherTest {
     }
 
     @Test
-    public void testSendMessage_WithTransactionalUnitOfWork() throws Exception {
+    void testSendMessage_WithTransactionalUnitOfWork() throws Exception {
         GenericEventMessage<String> message = new GenericEventMessage<>("Message");
         UnitOfWork<?> uow = DefaultUnitOfWork.startAndGet(message);
 
@@ -129,7 +131,7 @@ public class SpringAMQPPublisherTest {
     }
 
     @Test
-    public void testSendMessage_WithTransactionalUnitOfWork_ChannelClosedBeforeCommit() throws Exception {
+    void testSendMessage_WithTransactionalUnitOfWork_ChannelClosedBeforeCommit() throws Exception {
         GenericEventMessage<String> message = new GenericEventMessage<>("Message");
         UnitOfWork<?> uow = DefaultUnitOfWork.startAndGet(message);
 
@@ -146,12 +148,7 @@ public class SpringAMQPPublisherTest {
 
         eventBus.publish(message);
 
-        try {
-            uow.commit();
-            fail("Expected exception");
-        } catch (EventPublicationFailedException e) {
-            assertNotNull(e.getMessage());
-        }
+        assertThrows(EventPublicationFailedException.class, uow::commit);
 
         verify(transactionalChannel).txSelect();
         verify(transactionalChannel).basicPublish(
@@ -164,7 +161,7 @@ public class SpringAMQPPublisherTest {
     }
 
     @Test
-    public void testSendMessage_WithUnitOfWorkRollback() throws Exception {
+    void testSendMessage_WithUnitOfWorkRollback() throws Exception {
         GenericEventMessage<String> message = new GenericEventMessage<>("Message");
         UnitOfWork<?> uow = DefaultUnitOfWork.startAndGet(message);
 
@@ -195,7 +192,7 @@ public class SpringAMQPPublisherTest {
     }
 
     @Test
-    public void testSendMessageWithPublisherAck_UnitOfWorkCommitted()
+    void testSendMessageWithPublisherAck_UnitOfWorkCommitted()
             throws InterruptedException, IOException, TimeoutException {
         testSubject.setTransactional(false);
         testSubject.setWaitForPublisherAck(true);
@@ -233,22 +230,22 @@ public class SpringAMQPPublisherTest {
         verify(channel, never()).txRollback();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCannotSetPublisherAcksAfterTransactionalSetting() {
+    @Test
+    void testCannotSetPublisherAcksAfterTransactionalSetting() {
         testSubject.setTransactional(true);
-        testSubject.setWaitForPublisherAck(true);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCannotSetTransactionalBehaviorAfterPublisherAcks() {
-        testSubject.setTransactional(false);
-
-        testSubject.setWaitForPublisherAck(true);
-        testSubject.setTransactional(true);
+        assertThrows(IllegalArgumentException.class, () -> testSubject.setWaitForPublisherAck(true));
     }
 
     @Test
-    public void testSendMessageWithPublisherAck_NoActiveUnitOfWork() throws InterruptedException, IOException {
+    void testCannotSetTransactionalBehaviorAfterPublisherAcks() {
+        testSubject.setTransactional(false);
+
+        testSubject.setWaitForPublisherAck(true);
+        assertThrows(IllegalArgumentException.class, () -> testSubject.setTransactional(true));
+    }
+
+    @Test
+    void testSendMessageWithPublisherAck_NoActiveUnitOfWork() throws InterruptedException, IOException {
         testSubject.setTransactional(false);
         testSubject.setWaitForPublisherAck(true);
 

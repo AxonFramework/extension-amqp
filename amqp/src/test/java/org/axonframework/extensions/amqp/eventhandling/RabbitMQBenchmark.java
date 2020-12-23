@@ -21,6 +21,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -28,6 +29,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * Application benchmarking this extension by using RabbitMQ.
+ * TODO add test containers for this benchmark class
+ *
  * @author Allard Buijze
  */
 public class RabbitMQBenchmark {
@@ -63,7 +67,9 @@ public class RabbitMQBenchmark {
                             localChannel.txSelect();
                         }
                         for (int j = 0; j < COMMIT_SIZE; j++) {
-                            localChannel.basicPublish("", queueName, null, ("message" + t).getBytes("UTF-8"));
+                            localChannel.basicPublish(
+                                    "", queueName, null, ("message" + t).getBytes(StandardCharsets.UTF_8)
+                            );
                         }
                         if (transactional) {
                             localChannel.txCommit();
@@ -87,7 +93,9 @@ public class RabbitMQBenchmark {
                 try {
                     for (int t = 0; t < COMMIT_COUNT; t++) {
                         for (int j = 0; j < COMMIT_SIZE; j++) {
-                            localChannel.basicPublish("", queueName, null, ("message" + t).getBytes("UTF-8"));
+                            localChannel.basicPublish(
+                                    "", queueName, null, ("message" + t).getBytes(StandardCharsets.UTF_8)
+                            );
                         }
                     }
                 } catch (IOException e) {
@@ -111,7 +119,9 @@ public class RabbitMQBenchmark {
                         }
                         localChannel.txSelect();
                         for (int j = 0; j < COMMIT_SIZE; j++) {
-                            localChannel.basicPublish("", queueName, null, ("message" + t).getBytes("UTF-8"));
+                            localChannel.basicPublish(
+                                    "", queueName, null, ("message" + t).getBytes(StandardCharsets.UTF_8)
+                            );
                         }
                         localChannel.txCommit();
                         if (!channels.offer(localChannel)) {
