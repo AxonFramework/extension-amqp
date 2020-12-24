@@ -7,10 +7,7 @@ import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessage;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
-import org.axonframework.serialization.Serializer;
-import org.axonframework.serialization.xml.XStreamSerializer;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.FanoutExchange;
@@ -20,47 +17,51 @@ import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage;
+import static org.axonframework.extensions.amqp.eventhandling.utils.TestSerializer.secureXStreamSerializer;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Integration test for Spring AMQP approach.
+ * Integration test for the Spring AMQP approach of this extension.
  *
  * @author Allard Buijze
- * TODO add test containers
  */
-@ContextConfiguration(classes = SpringAMQPIntegrationTest.Context.class)
-@ExtendWith(SpringExtension.class)
+@Testcontainers
 class SpringAMQPIntegrationTest {
 
-    @Autowired
-    private SimpleMessageListenerContainer listenerContainer;
+    @Container
+    private static final RabbitMQContainer RABBIT_MQ_CONTAINER = new RabbitMQContainer("rabbitmq");
 
-    @Autowired
-    private AmqpAdmin amqpAdmin;
-
-    @Autowired
+    private AMQPMessageConverter messageConverter;
     private SpringAMQPMessageSource springAMQPMessageSource;
 
-    @Autowired
-    private AMQPMessageConverter messageConverter;
-
-    @Autowired
     private ConnectionFactory connectionFactory;
+    private SimpleMessageListenerContainer listenerContainer;
+    private AmqpAdmin amqpAdmin;
 
     @BeforeEach
     void setUp() {
+        messageConverter = DefaultAMQPMessageConverter.builder()
+                                                      .serializer(secureXStreamSerializer())
+                                                      .build();
+        springAMQPMessageSource = new SpringAMQPMessageSource(messageConverter);
+
+
+        connectionFactory = new CachingConnectionFactory(URI.create(RABBIT_MQ_CONTAINER.getAmqpUrl()));
+        listenerContainer = new SimpleMessageListenerContainer(connectionFactory);
+        listenerContainer.setQueueNames("testQueue");
+        listenerContainer.setAutoStartup(false);
+
+        amqpAdmin = new RabbitAdmin(connectionFactory);
         amqpAdmin.declareQueue(new Queue("testQueue", false, false, true));
         amqpAdmin.declareExchange(new FanoutExchange("testExchange", false, true));
         amqpAdmin.declareBinding(new Binding("testQueue", Binding.DestinationType.QUEUE, "testExchange", "", null));
@@ -68,16 +69,11 @@ class SpringAMQPIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        try {
-            listenerContainer.stop();
-            amqpAdmin.deleteExchange("testExchange");
-            amqpAdmin.deleteQueue("testQueue");
-        } catch (Exception e) {
-            // whatever
-        }
+        listenerContainer.stop();
+        amqpAdmin.deleteExchange("testExchange");
+        amqpAdmin.deleteQueue("testQueue");
     }
 
-    @DirtiesContext
     @Test
     void testReadFromAMQP() throws Exception {
         listenerContainer.setMessageListener(springAMQPMessageSource);
@@ -102,7 +98,6 @@ class SpringAMQPIntegrationTest {
         assertTrue(cdl.await(10, TimeUnit.SECONDS));
     }
 
-    @DirtiesContext
     @Test
     void testPublishMessagesFromEventBus() throws Exception {
         SimpleEventBus messageSource = SimpleEventBus.builder().build();
@@ -129,44 +124,5 @@ class SpringAMQPIntegrationTest {
         GetResponse message = channel.basicGet("testQueue", true);
         assertNotNull(message, "Expected message on the queue");
         return messageConverter.readAMQPMessage(message.getBody(), message.getProps().getHeaders()).orElse(null);
-    }
-
-    @Configuration
-    static class Context {
-
-        @Bean
-        public SpringAMQPMessageSource springAMQPMessageSource() {
-            return new SpringAMQPMessageSource(messageConverter());
-        }
-
-        @Bean
-        public AMQPMessageConverter messageConverter() {
-            return DefaultAMQPMessageConverter.builder()
-                                              .serializer(seralizer())
-                                              .build();
-        }
-
-        @Bean
-        public Serializer seralizer() {
-            return XStreamSerializer.builder().build();
-        }
-
-        @Bean
-        public SimpleMessageListenerContainer rabbitListener() {
-            SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer(connectionFactory());
-            listenerContainer.setQueueNames("testQueue");
-            listenerContainer.setAutoStartup(false);
-            return listenerContainer;
-        }
-
-        @Bean
-        public ConnectionFactory connectionFactory() {
-            return new CachingConnectionFactory("localhost");
-        }
-
-        @Bean
-        public AmqpAdmin amqpAdmin() {
-            return new RabbitAdmin(connectionFactory());
-        }
     }
 }
