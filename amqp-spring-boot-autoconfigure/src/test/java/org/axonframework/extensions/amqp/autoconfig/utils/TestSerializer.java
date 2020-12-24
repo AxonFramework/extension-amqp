@@ -38,7 +38,8 @@ public abstract class TestSerializer {
     public static XStreamSerializer secureXStreamSerializer() {
         XStream xStream = new XStream();
         xStream.setClassLoader(TestSerializer.class.getClassLoader());
-        xStream.allowTypesByWildcard(new String[]{"org.axonframework.extensions.amqp.**"});
+        xStream.allowTypesByWildcard(new String[]{"org.axonframework.**"});
+        XStream.setupDefaultSecurity(xStream);
         return XStreamSerializer.builder().xStream(xStream).build();
     }
 }
