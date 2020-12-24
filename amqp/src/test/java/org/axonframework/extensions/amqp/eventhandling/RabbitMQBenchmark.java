@@ -16,21 +16,23 @@
 
 package org.axonframework.extensions.amqp.eventhandling;
 
+import com.rabbitmq.client.Address;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.testcontainers.containers.RabbitMQContainer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Application benchmarking this extension by using RabbitMQ.
- * TODO add test containers for this benchmark class
+ * Application benchmarking this extension by using RabbitMQ in a Test Container.
  *
  * @author Allard Buijze
  */
@@ -41,18 +43,25 @@ public class RabbitMQBenchmark {
     private static final int COMMIT_COUNT = 1500;
 
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException {
-        final Connection connection = new ConnectionFactory().newConnection();
-        final Channel channel = connection.createChannel();
-        String queueName = channel.queueDeclare().getQueue();
-        execute("Transactional and Channel pooling", createChannelPoolSharingThreads(connection, queueName));
-        queueName = refreshQueue(channel, queueName);
-        execute("Transactional, new Channel per tx", createChannelCreatingThreads(connection, queueName, true));
-        queueName = refreshQueue(channel, queueName);
-        execute("Non-transactional, new Channel per tx", createChannelCreatingThreads(connection, queueName, false));
-        queueName = refreshQueue(channel, queueName);
-        execute("Non-transactional, single Channel", createChannelSharingThreads(connection, queueName));
-        channel.confirmSelect();
-        connection.close();
+        try (RabbitMQContainer rabbitMQContainer = new RabbitMQContainer("rabbitmq")) {
+            rabbitMQContainer.start();
+            Address address = new Address(rabbitMQContainer.getHost(), rabbitMQContainer.getAmqpPort());
+
+            final Connection connection = new ConnectionFactory().newConnection(Collections.singletonList(address));
+            final Channel channel = connection.createChannel();
+
+            String queueName = channel.queueDeclare().getQueue();
+            execute("Transactional and Channel pooling", createChannelPoolSharingThreads(connection, queueName));
+            queueName = refreshQueue(channel, queueName);
+            execute("Transactional, new Channel per tx", createChannelCreatingThreads(connection, queueName, true));
+            queueName = refreshQueue(channel, queueName);
+            execute("Non-transactional, new Channel per tx",
+                    createChannelCreatingThreads(connection, queueName, false));
+            queueName = refreshQueue(channel, queueName);
+            execute("Non-transactional, single Channel", createChannelSharingThreads(connection, queueName));
+            channel.confirmSelect();
+            connection.close();
+        }
     }
 
     private static List<Thread> createChannelCreatingThreads(final Connection connection, final String queueName,
