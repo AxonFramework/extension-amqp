@@ -16,12 +16,12 @@
 
 package org.axonframework.extensions.amqp.eventhandling.legacy;
 
-import org.axonframework.eventhandling.EventMessage;
-import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.eventhandling.DomainEventMessage;
+import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.GenericDomainEventMessage;
+import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.serialization.xml.XStreamSerializer;
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,17 +29,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.axonframework.extensions.amqp.eventhandling.utils.TestSerializer.secureXStreamSerializer;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Test class validating the {@link EventMessageReader}.
+ *
  * @author Allard Buijze
  */
-public class MessageStreamTest {
+class EventMessageReaderTest {
 
     @Test
-    public void testStreamEventMessage() throws Exception {
+    void testStreamEventMessage() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XStreamSerializer serializer = XStreamSerializer.builder().build();
+        XStreamSerializer serializer = secureXStreamSerializer();
         EventMessageWriter out = new EventMessageWriter(new DataOutputStream(baos), serializer);
         GenericEventMessage<String> message = new GenericEventMessage<>(
                 "This is the payload", Collections.<String, Object>singletonMap("metaKey", "MetaValue")
@@ -57,9 +60,9 @@ public class MessageStreamTest {
     }
 
     @Test
-    public void testStreamDomainEventMessage() throws Exception {
+    void testStreamDomainEventMessage() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XStreamSerializer serializer = XStreamSerializer.builder().build();
+        XStreamSerializer serializer = secureXStreamSerializer();
         EventMessageWriter out = new EventMessageWriter(new DataOutputStream(baos), serializer);
         GenericDomainEventMessage<String> message = new GenericDomainEventMessage<>(
                 "type",
@@ -74,7 +77,7 @@ public class MessageStreamTest {
         EventMessage<Object> serializedMessage = in.readEventMessage();
         assertTrue(serializedMessage instanceof DomainEventMessage);
 
-        DomainEventMessage serializedDomainEventMessage = (DomainEventMessage) serializedMessage;
+        DomainEventMessage<?> serializedDomainEventMessage = (DomainEventMessage<?>) serializedMessage;
 
         assertEquals(message.getIdentifier(), serializedDomainEventMessage.getIdentifier());
         assertEquals(message.getPayloadType(), serializedDomainEventMessage.getPayloadType());

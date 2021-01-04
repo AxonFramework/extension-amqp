@@ -17,17 +17,16 @@
 package org.axonframework.extensions.amqp.autoconfig;
 
 import org.axonframework.eventhandling.EventBus;
+import org.axonframework.extensions.amqp.AMQPProperties;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.PackageRoutingKeyResolver;
 import org.axonframework.extensions.amqp.eventhandling.RoutingKeyResolver;
 import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublisher;
-import org.axonframework.extensions.amqp.AMQPProperties;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
 import org.axonframework.springboot.autoconfig.InfraConfiguration;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
@@ -39,14 +38,24 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Auto configuration class for the defining a {@link SpringAMQPPublisher}, publishing events to a RabbitMQ instance
+ * from the {@link EventBus}.
+ *
+ * @author Allard Buijze
+ * @since 3.0
+ */
 @Configuration
 @ConditionalOnClass(SpringAMQPPublisher.class)
 @EnableConfigurationProperties(AMQPProperties.class)
 @AutoConfigureAfter({RabbitAutoConfiguration.class, AxonAutoConfiguration.class, InfraConfiguration.class})
 public class AMQPAutoConfiguration {
 
-    @Autowired
-    private AMQPProperties amqpProperties;
+    private final AMQPProperties amqpProperties;
+
+    public AMQPAutoConfiguration(AMQPProperties amqpProperties) {
+        this.amqpProperties = amqpProperties;
+    }
 
     @ConditionalOnMissingBean
     @Bean
@@ -54,6 +63,7 @@ public class AMQPAutoConfiguration {
         return new PackageRoutingKeyResolver();
     }
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @ConditionalOnMissingBean
     @Bean
     public AMQPMessageConverter amqpMessageConverter(@Qualifier("eventSerializer") Serializer eventSerializer,
@@ -64,6 +74,7 @@ public class AMQPAutoConfiguration {
                                           .durable(amqpProperties.isDurableMessages()).build();
     }
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @ConditionalOnProperty("axon.amqp.exchange")
     @ConditionalOnBean(ConnectionFactory.class)
     @ConditionalOnMissingBean
