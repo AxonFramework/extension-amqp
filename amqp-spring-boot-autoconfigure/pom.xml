@@ -34,7 +34,7 @@
 
     <properties>
         <assertj.version>3.19.0</assertj.version>
-        <jackson.version>2.12.1</jackson.version>
+        <jackson.version>2.12.2</jackson.version>
     </properties>
 
     <dependencies>
