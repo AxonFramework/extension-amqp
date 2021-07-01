@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2010-2018. Axon Framework
+ * Copyright (c) 2010-2021. Axon Framework
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,9 +24,12 @@ import org.axonframework.messaging.Headers;
 import org.axonframework.messaging.MetaData;
 import org.junit.jupiter.api.*;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.axonframework.common.DateTimeUtils.formatInstant;
+import static org.axonframework.common.DateTimeUtils.parseInstant;
 import static org.axonframework.extensions.amqp.eventhandling.utils.TestSerializer.secureXStreamSerializer;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Allard Buijze
  * @author Nakul Mishra
+ * @author Steven van Beelen
  */
 class DefaultAMQPMessageConverterTest {
 
@@ -49,19 +53,22 @@ class DefaultAMQPMessageConverterTest {
 
     @Test
     void testWriteAndReadEventMessage() {
-        EventMessage<?> eventMessage = GenericEventMessage.asEventMessage("SomePayload")
-                                                          .withMetaData(MetaData.with("key", "value"));
-        AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
-        EventMessage<?> actualResult = testSubject.readAMQPMessage(
-                amqpMessage.getBody(), amqpMessage.getProperties().getHeaders()
-        ).orElseThrow(() -> new AssertionError("Expected valid message"));
+        EventMessage<?> expected = GenericEventMessage.asEventMessage("SomePayload")
+                                                      .withMetaData(MetaData.with("key", "value"));
+        // Parsing and formatting the Instant to simulate the process a converter would take
+        Instant expectedTimestamp = parseInstant(formatInstant(expected.getTimestamp()));
 
-        assertEquals(eventMessage.getIdentifier(), amqpMessage.getProperties().getHeaders().get(Headers.MESSAGE_ID));
-        assertEquals(eventMessage.getIdentifier(), actualResult.getIdentifier());
-        assertEquals(eventMessage.getMetaData(), actualResult.getMetaData());
-        assertEquals(eventMessage.getPayload(), actualResult.getPayload());
-        assertEquals(eventMessage.getPayloadType(), actualResult.getPayloadType());
-        assertEquals(eventMessage.getTimestamp(), actualResult.getTimestamp());
+        AMQPMessage amqpMessage = testSubject.createAMQPMessage(expected);
+        EventMessage<?> result =
+                testSubject.readAMQPMessage(amqpMessage.getBody(), amqpMessage.getProperties().getHeaders())
+                           .orElseThrow(() -> new AssertionError("Expected valid message"));
+
+        assertEquals(expected.getIdentifier(), amqpMessage.getProperties().getHeaders().get(Headers.MESSAGE_ID));
+        assertEquals(expected.getIdentifier(), result.getIdentifier());
+        assertEquals(expected.getMetaData(), result.getMetaData());
+        assertEquals(expected.getPayload(), result.getPayload());
+        assertEquals(expected.getPayloadType(), result.getPayloadType());
+        assertEquals(expectedTimestamp, result.getTimestamp());
     }
 
     @Test
@@ -88,26 +95,28 @@ class DefaultAMQPMessageConverterTest {
 
     @Test
     void testWriteAndReadDomainEventMessage() {
-        DomainEventMessage<?> eventMessage =
+        DomainEventMessage<?> expected =
                 new GenericDomainEventMessage<>("Stub", "1234", 1L, "Payload", MetaData.with("key", "value"));
-        AMQPMessage amqpMessage = testSubject.createAMQPMessage(eventMessage);
-        EventMessage<?> actualResult = testSubject.readAMQPMessage(
-                amqpMessage.getBody(), amqpMessage.getProperties().getHeaders()
-        ).orElseThrow(() -> new AssertionError("Expected valid message"));
+        // Parsing and formatting the Instant to simulate the process a converter would take
+        Instant expectedTimestamp = parseInstant(formatInstant(expected.getTimestamp()));
 
-        assertEquals(eventMessage.getIdentifier(), amqpMessage.getProperties().getHeaders().get(Headers.MESSAGE_ID));
+        AMQPMessage amqpMessage = testSubject.createAMQPMessage(expected);
+        EventMessage<?> result =
+                testSubject.readAMQPMessage(amqpMessage.getBody(), amqpMessage.getProperties().getHeaders())
+                           .orElseThrow(() -> new AssertionError("Expected valid message"));
+
+        assertEquals(expected.getIdentifier(), amqpMessage.getProperties().getHeaders().get(Headers.MESSAGE_ID));
         assertEquals("1234", amqpMessage.getProperties().getHeaders().get(Headers.AGGREGATE_ID));
         assertEquals(1L, amqpMessage.getProperties().getHeaders().get(Headers.AGGREGATE_SEQ));
 
-        assertTrue(actualResult instanceof DomainEventMessage);
-        assertEquals(eventMessage.getIdentifier(), actualResult.getIdentifier());
-        assertEquals(eventMessage.getMetaData(), actualResult.getMetaData());
-        assertEquals(eventMessage.getPayload(), actualResult.getPayload());
-        assertEquals(eventMessage.getPayloadType(), actualResult.getPayloadType());
-        assertEquals(eventMessage.getTimestamp(), actualResult.getTimestamp());
-        assertEquals(eventMessage.getAggregateIdentifier(),
-                     ((DomainEventMessage<?>) actualResult).getAggregateIdentifier());
-        assertEquals(eventMessage.getType(), ((DomainEventMessage<?>) actualResult).getType());
-        assertEquals(eventMessage.getSequenceNumber(), ((DomainEventMessage<?>) actualResult).getSequenceNumber());
+        assertTrue(result instanceof DomainEventMessage);
+        assertEquals(expected.getIdentifier(), result.getIdentifier());
+        assertEquals(expected.getMetaData(), result.getMetaData());
+        assertEquals(expected.getPayload(), result.getPayload());
+        assertEquals(expected.getPayloadType(), result.getPayloadType());
+        assertEquals(expectedTimestamp, result.getTimestamp());
+        assertEquals(expected.getAggregateIdentifier(), ((DomainEventMessage<?>) result).getAggregateIdentifier());
+        assertEquals(expected.getType(), ((DomainEventMessage<?>) result).getType());
+        assertEquals(expected.getSequenceNumber(), ((DomainEventMessage<?>) result).getSequenceNumber());
     }
 }

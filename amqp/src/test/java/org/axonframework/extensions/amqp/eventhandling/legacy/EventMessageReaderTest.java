@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2010-2012. Axon Framework
+ * Copyright (c) 2010-2021. Axon Framework
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,8 +27,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.time.Instant;
 import java.util.Collections;
 
+import static org.axonframework.common.DateTimeUtils.formatInstant;
+import static org.axonframework.common.DateTimeUtils.parseInstant;
 import static org.axonframework.extensions.amqp.eventhandling.utils.TestSerializer.secureXStreamSerializer;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,19 +47,23 @@ class EventMessageReaderTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XStreamSerializer serializer = secureXStreamSerializer();
         EventMessageWriter out = new EventMessageWriter(new DataOutputStream(baos), serializer);
-        GenericEventMessage<String> message = new GenericEventMessage<>(
+
+        GenericEventMessage<String> expected = new GenericEventMessage<>(
                 "This is the payload", Collections.<String, Object>singletonMap("metaKey", "MetaValue")
         );
-        out.writeEventMessage(message);
-        EventMessageReader in = new EventMessageReader(new DataInputStream(
-                new ByteArrayInputStream(baos.toByteArray())), serializer);
-        EventMessage<Object> serializedMessage = in.readEventMessage();
+        // Parsing and formatting the Instant to simulate the process a reader/writer would take
+        Instant expectedTimestamp = parseInstant(formatInstant(expected.getTimestamp()));
 
-        assertEquals(message.getIdentifier(), serializedMessage.getIdentifier());
-        assertEquals(message.getPayloadType(), serializedMessage.getPayloadType());
-        assertEquals(message.getTimestamp(), serializedMessage.getTimestamp());
-        assertEquals(message.getMetaData(), serializedMessage.getMetaData());
-        assertEquals(message.getPayload(), serializedMessage.getPayload());
+        out.writeEventMessage(expected);
+        EventMessageReader in =
+                new EventMessageReader(new DataInputStream(new ByteArrayInputStream(baos.toByteArray())), serializer);
+        EventMessage<Object> result = in.readEventMessage();
+
+        assertEquals(expected.getIdentifier(), result.getIdentifier());
+        assertEquals(expected.getPayloadType(), result.getPayloadType());
+        assertEquals(expectedTimestamp, result.getTimestamp());
+        assertEquals(expected.getMetaData(), result.getMetaData());
+        assertEquals(expected.getPayload(), result.getPayload());
     }
 
     @Test
@@ -64,27 +71,28 @@ class EventMessageReaderTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XStreamSerializer serializer = secureXStreamSerializer();
         EventMessageWriter out = new EventMessageWriter(new DataOutputStream(baos), serializer);
-        GenericDomainEventMessage<String> message = new GenericDomainEventMessage<>(
-                "type",
-                "AggregateID",
-                1L,
-                "This is the payload",
+
+        GenericDomainEventMessage<String> expected = new GenericDomainEventMessage<>(
+                "type", "AggregateID", 1L, "This is the payload",
                 Collections.<String, Object>singletonMap("metaKey", "MetaValue")
         );
-        out.writeEventMessage(message);
+        // Parsing and formatting the Instant to simulate the process a converter would take
+        Instant expectedTimestamp = parseInstant(formatInstant(expected.getTimestamp()));
+
+        out.writeEventMessage(expected);
         EventMessageReader in = new EventMessageReader(
                 new DataInputStream(new ByteArrayInputStream(baos.toByteArray())), serializer);
         EventMessage<Object> serializedMessage = in.readEventMessage();
         assertTrue(serializedMessage instanceof DomainEventMessage);
 
-        DomainEventMessage<?> serializedDomainEventMessage = (DomainEventMessage<?>) serializedMessage;
+        DomainEventMessage<?> result = (DomainEventMessage<?>) serializedMessage;
 
-        assertEquals(message.getIdentifier(), serializedDomainEventMessage.getIdentifier());
-        assertEquals(message.getPayloadType(), serializedDomainEventMessage.getPayloadType());
-        assertEquals(message.getTimestamp(), serializedDomainEventMessage.getTimestamp());
-        assertEquals(message.getMetaData(), serializedDomainEventMessage.getMetaData());
-        assertEquals(message.getPayload(), serializedDomainEventMessage.getPayload());
-        assertEquals(message.getAggregateIdentifier(), serializedDomainEventMessage.getAggregateIdentifier());
-        assertEquals(message.getSequenceNumber(), serializedDomainEventMessage.getSequenceNumber());
+        assertEquals(expected.getIdentifier(), result.getIdentifier());
+        assertEquals(expected.getPayloadType(), result.getPayloadType());
+        assertEquals(expectedTimestamp, result.getTimestamp());
+        assertEquals(expected.getMetaData(), result.getMetaData());
+        assertEquals(expected.getPayload(), result.getPayload());
+        assertEquals(expected.getAggregateIdentifier(), result.getAggregateIdentifier());
+        assertEquals(expected.getSequenceNumber(), result.getSequenceNumber());
     }
 }
