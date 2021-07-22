@@ -54,7 +54,7 @@
         <rabbitmq.version>5.13.0</rabbitmq.version>
 
         <spring.version>5.3.9</spring.version>
-        <spring.boot.version>2.5.2</spring.boot.version>
+        <spring.boot.version>2.5.3</spring.boot.version>
 
         <slf4j.version>1.7.32</slf4j.version>
         <log4j.version>2.14.1</log4j.version>
