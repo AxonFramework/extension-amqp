@@ -24,6 +24,7 @@
         <module>amqp</module>
         <module>amqp-spring-boot-autoconfigure</module>
         <module>amqp-spring-boot-starter</module>
+        <module>amqp-axon-example</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -35,7 +36,7 @@
     </description>
 
     <inceptionYear>2010</inceptionYear>
-    <url>http://www.axonframework.org</url>
+    <url>https://axoniq.io/</url>
     <licenses>
         <license>
             <name>Apache 2.0</name>

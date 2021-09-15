@@ -71,7 +71,8 @@ public class AMQPAutoConfiguration {
         return DefaultAMQPMessageConverter.builder()
                                           .serializer(eventSerializer)
                                           .routingKeyResolver(routingKeyResolver)
-                                          .durable(amqpProperties.isDurableMessages()).build();
+                                          .durable(amqpProperties.isDurableMessages())
+                                          .build();
     }
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")

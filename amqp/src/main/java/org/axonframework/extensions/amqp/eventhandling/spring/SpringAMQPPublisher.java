@@ -53,7 +53,7 @@ import java.util.concurrent.TimeoutException;
  * EventBusTerminal implementation that uses an AMQP 0.9 compatible Message Broker to dispatch event messages. All
  * outgoing messages are sent to a configured Exchange, which defaults to "{@code Axon.EventBus}".
  * <p>
- * This publisher does not dispatch Events internally, as it relies on each event processor to listen to it's own AMQP
+ * This publisher does not dispatch Events internally, as it relies on each event processor to listen to its own AMQP
  * Queue.
  *
  * @author Allard Buijze

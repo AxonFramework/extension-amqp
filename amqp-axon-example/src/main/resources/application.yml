@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: amqpAxonExample
+axon:
+  amqp:
+    exchange: exchange
+  eventhandling:
+    processors:
+      amqpEvents:
+        source: amqpMessageSource
+        mode: subscribing
