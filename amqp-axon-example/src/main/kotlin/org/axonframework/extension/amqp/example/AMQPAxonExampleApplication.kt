@@ -42,12 +42,12 @@ class AMQPAxonExampleApplication {
 
     @Bean
     fun eventsExchange(): TopicExchange {
-        return TopicExchange(topicExchangeName)
+        return TopicExchange(TOPIC_EXCHANGE_NAME)
     }
 
     @Bean
     fun eventsQueue(): Queue {
-        return Queue(queueName, true)
+        return Queue(QUEUE_NAME, true)
     }
 
     @Bean
@@ -59,9 +59,9 @@ class AMQPAxonExampleApplication {
 
     companion object {
 
-        const val topicExchangeName = "exchange"
+        const val TOPIC_EXCHANGE_NAME = "exchange"
 
-        const val queueName = "queue"
+        const val QUEUE_NAME = "queue"
     }
 
 }

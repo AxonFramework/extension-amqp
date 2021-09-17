@@ -21,7 +21,7 @@ import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore
 import org.axonframework.eventsourcing.eventstore.EventStorageEngine
 import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine
-import org.axonframework.extension.amqp.example.AMQPAxonExampleApplication.Companion.queueName
+import org.axonframework.extension.amqp.example.AMQPAxonExampleApplication.Companion.QUEUE_NAME
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter
 import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPMessageSource
 import org.springframework.amqp.core.Message
@@ -41,7 +41,7 @@ class AxonConfig {
     @Bean
     fun amqpMessageSource(messageConverter: AMQPMessageConverter): SpringAMQPMessageSource {
         return object : SpringAMQPMessageSource(messageConverter) {
-            @RabbitListener(queues = [queueName])
+            @RabbitListener(queues = [QUEUE_NAME])
             override fun onMessage(message: Message, channel: Channel) {
                 println("amqp event $message received")
                 super.onMessage(message, channel)

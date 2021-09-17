@@ -38,7 +38,7 @@ class BankClient(
 
     companion object : KLogging()
 
-    private val accountId = UUID.randomUUID().toString()
+    private var accountId = UUID.randomUUID().toString()
     private var amount = 100
 
     /**
@@ -46,7 +46,8 @@ class BankClient(
      */
     @Scheduled(initialDelay = 5_000, fixedDelay = 1000_000_000)
     fun createAccount() {
-        logger.info { "creating account..." }
+        accountId = UUID.randomUUID().toString()
+        logger.info { "creating account '${accountId}'..." }
         commandGateway.send<String>(
             CreateBankAccountCommand(
                 bankAccountId = accountId,
@@ -60,7 +61,7 @@ class BankClient(
      */
     @Scheduled(initialDelay = 10_000, fixedDelay = 20_000)
     fun deposit() {
-        logger.info { "depositing money..." }
+        logger.info { "depositing money on '${accountId}'..." }
         commandGateway.send<Any?>(
             DepositMoneyCommand(
                 bankAccountId = accountId,
