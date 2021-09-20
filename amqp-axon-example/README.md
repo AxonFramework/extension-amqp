@@ -1,6 +1,6 @@
 # AMQP Axon Springboot Example
 
-This is an example SpringBoot application using the Axon's AMQP extension. It uses an In Memory Event Store and RabbitMQ as the Message Bus.
+This is an example SpringBoot application using Axon's AMQP extension. It uses an In-Memory Event Store and RabbitMQ as the Message Bus.
 
 ## How to run
 
