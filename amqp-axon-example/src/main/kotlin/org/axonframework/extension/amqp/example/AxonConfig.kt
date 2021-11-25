@@ -42,7 +42,7 @@ class AxonConfig {
     fun amqpMessageSource(messageConverter: AMQPMessageConverter): SpringAMQPMessageSource {
         return object : SpringAMQPMessageSource(messageConverter) {
             @RabbitListener(queues = [QUEUE_NAME])
-            override fun onMessage(message: Message, channel: Channel) {
+            override fun onMessage(message: Message?, channel: Channel?) {
                 println("amqp event $message received")
                 super.onMessage(message, channel)
             }
