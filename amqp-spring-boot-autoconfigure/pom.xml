@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2010-2020. Axon Framework
+  ~ Copyright (c) 2010-2022. Axon Framework
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -34,7 +34,8 @@
 
     <properties>
         <assertj.version>3.22.0</assertj.version>
-        <jackson.version>2.13.2.1</jackson.version>
+        <jackson.version>2.13.2</jackson.version>
+        <jackson-databind.version>2.13.2.1</jackson-databind.version>
     </properties>
 
     <dependencies>
@@ -104,7 +105,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
