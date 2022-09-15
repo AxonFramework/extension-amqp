@@ -1,5 +1,22 @@
+/*
+ * Copyright (c) 2010-2022. Axon Framework
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.axonframework.extensions.amqp.autoconfig;
 
+import org.axonframework.config.Configuration;
 import org.axonframework.extensions.amqp.eventhandling.AMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.DefaultAMQPMessageConverter;
 import org.axonframework.extensions.amqp.eventhandling.PackageRoutingKeyResolver;
@@ -8,8 +25,7 @@ import org.axonframework.extensions.amqp.eventhandling.spring.SpringAMQPPublishe
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.json.JacksonSerializer;
 import org.axonframework.serialization.xml.XStreamSerializer;
-import org.axonframework.spring.config.AxonConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerAutoConfiguration;
+import org.axonframework.spring.config.SpringAxonConfiguration;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,7 +48,7 @@ import static org.axonframework.extensions.amqp.autoconfig.utils.TestSerializer.
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class validating the {@link AMQPAutoConfiguration}
+ * Test class validating the {@link AMQPAutoConfiguration}.
  *
  * @author Allard Buijze
  * @author Steven van Beelen
@@ -41,10 +57,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class AMQPAutoConfigurationTest {
 
     @Test
-    void testDefaultAutoConfiguration() {
+    void defaultAutoConfiguration() {
         new ApplicationContextRunner()
                 .withConfiguration(AutoConfigurations.of(DefaultContext.class))
-                .withPropertyValues("axon.amqp.exchange=test")
+                .withPropertyValues("axon.amqp.exchange=test", "axon.axonserver.enabled=false")
                 .run(context -> {
                     assertThat(context).getBeanNames(RoutingKeyResolver.class)
                                        .hasSize(1);
@@ -62,13 +78,13 @@ class AMQPAutoConfigurationTest {
     }
 
     @Test
-    void testAutoConfigurationWithConfiguredEventSerializer() {
+    void autoConfigurationWithConfiguredEventSerializer() {
         new ApplicationContextRunner()
                 .withConfiguration(AutoConfigurations.of(SerializerContext.class))
-                .withPropertyValues("axon.amqp.exchange=test")
+                .withPropertyValues("axon.amqp.exchange=test", "axon.axonserver.enabled=false")
                 .run(context -> {
-                    AxonConfiguration axonConfig = context.getBean(AxonConfiguration.class);
-                    assertNotEquals(axonConfig.serializer(), axonConfig.eventSerializer());
+                    Configuration config = context.getBean(SpringAxonConfiguration.class).getObject();
+                    assertNotEquals(config.serializer(), config.eventSerializer());
 
                     AMQPMessageConverter messageConverter = context.getBean(AMQPMessageConverter.class);
                     assertNotNull(messageConverter);
@@ -90,8 +106,7 @@ class AMQPAutoConfigurationTest {
             JmxAutoConfiguration.class,
             WebClientAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class,
-            DataSourceAutoConfiguration.class,
-            AxonServerAutoConfiguration.class
+            DataSourceAutoConfiguration.class
     })
     static class DefaultContext {
 
@@ -101,8 +116,7 @@ class AMQPAutoConfigurationTest {
             JmxAutoConfiguration.class,
             WebClientAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class,
-            DataSourceAutoConfiguration.class,
-            AxonServerAutoConfiguration.class
+            DataSourceAutoConfiguration.class
     })
     static class SerializerContext {
 
