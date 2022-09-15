@@ -12,7 +12,7 @@ updates:
   reviewers:
     - "smcvb" # Main
     - "YvonneCeelie"
-  milestone: 6
+  milestone: 7
 - package-ecosystem: maven
   directory: "/"
   schedule:
@@ -25,4 +25,4 @@ updates:
   reviewers:
     - "smcvb" # Main
     - "YvonneCeelie"
-  milestone: 6
+  milestone: 7
