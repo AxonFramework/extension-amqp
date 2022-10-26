@@ -11,7 +11,6 @@ updates:
     - "Status: In Progress"
   reviewers:
     - "smcvb" # Main
-    - "YvonneCeelie"
   milestone: 7
 - package-ecosystem: maven
   directory: "/"
@@ -24,5 +23,4 @@ updates:
     - "Status: In Progress"
   reviewers:
     - "smcvb" # Main
-    - "YvonneCeelie"
   milestone: 7
