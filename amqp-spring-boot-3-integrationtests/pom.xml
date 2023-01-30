@@ -29,7 +29,7 @@
     <artifactId>axon-amqp-spring-boot-3-integrationtests</artifactId>
     <groupId>org.axonframework.extensions.amqp</groupId>
 
-    <name>Axon Framework Mongo Extension Spring Boot 3 Integration Tests</name>
+    <name>Axon Framework AMQP Extension Spring Boot 3 Integration Tests</name>
     <description>
         Module used to test the integration with Spring Boot 3
     </description>
