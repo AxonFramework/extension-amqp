@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2010-2017. Axon Framework
+ * Copyright (c) 2010-2023. Axon Framework
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,6 +28,7 @@ import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
 import org.axonframework.springboot.autoconfig.InfraConfiguration;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -36,7 +37,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Auto configuration class for the defining a {@link SpringAMQPPublisher}, publishing events to a RabbitMQ instance
@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Allard Buijze
  * @since 3.0
  */
-@Configuration
+@AutoConfiguration
 @ConditionalOnClass(SpringAMQPPublisher.class)
 @EnableConfigurationProperties(AMQPProperties.class)
 @AutoConfigureAfter({RabbitAutoConfiguration.class, AxonAutoConfiguration.class, InfraConfiguration.class})
