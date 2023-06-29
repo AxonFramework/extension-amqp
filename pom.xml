@@ -31,9 +31,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>Axon Framework - AMQP Extension</name>
-    <description>
-        Extension for Axon Framework that provides connectors to AMQP 0.9 Message Brokers.
-    </description>
+    <description>Extension for Axon Framework that provides connectors to AMQP 0.9 Message Brokers.</description>
 
     <inceptionYear>2010</inceptionYear>
     <url>https://axoniq.io/</url>
@@ -419,9 +417,8 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>${maven-gpg.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
