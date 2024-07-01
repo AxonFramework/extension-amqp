@@ -1,0 +1,13 @@
+:navtitle: Spring AMQP Extension
+= Spring AMPQ
+
+Spring AMQP is an alternative approach to distributing events, besides Axon Server which is the default.
+
+Axon provides out-of-the-box support to transfer events to and from an AMQP message broker, such as link:https://www.rabbitmq.com/[RabbitMQ,window=_blank,role=external].
+
+To use the Spring AMQP components from Axon, make sure the `axon-amqp` module is available on the classpath.
+
+Once added to the classpath of your application, you can use the Spring AMQP extension to:
+
+- xref:forwarding.adoc[Forward events to an AMQP exchange]
+- xref:reading.adoc[Read events from an AMQP queue]

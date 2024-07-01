@@ -1,0 +1,17 @@
+:navtitle: Forwarding events to an AMQP exchange
+= Forwarding Events to an AMQP Exchange
+
+The `SpringAMQPPublisher` forwards events to an AMQP exchange. It is initialized with a `SubscribableMessageSource`, which is generally the `EventBus` or `EventStore`. Theoretically, this could be any source of events that the publisher can subscribe to.
+
+To forward events generated in the application to an AMQP Channel, a single line of `application.properties` configuration is sufficient:
+
+[source,properties]
+axon.amqp.exchange=ExchangeName
+
+
+This will automatically send all published events to the AMQP Exchange with the given name.
+
+By default, no AMQP transactions are used when sending. This can be overridden using the `axon.amqp.transaction-mode` property, and setting it to `transactional` or `publisher-ack`.
+
+NOTE: Note that exchanges are not automatically created. You must still declare the Queues, Exchanges and Bindings you wish to use. Check the Spring documentation for more information.
+
