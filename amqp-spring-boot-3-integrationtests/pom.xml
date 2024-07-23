@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.axonframework.extensions.amqp</groupId>
             <artifactId>axon-amqp-spring-boot-starter</artifactId>
-            <version>${axon.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
