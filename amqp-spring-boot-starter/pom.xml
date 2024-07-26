@@ -26,7 +26,7 @@
 
     <groupId>org.axonframework.extensions.amqp</groupId>
     <artifactId>axon-amqp-spring-boot-starter</artifactId>
-    <version>4.10.1-SNAPSHOT</version>
+    <version>4.11.0-SNAPSHOT</version>
 
     <name>Axon Framework AMQP Extension - Spring Boot Starter</name>
     <description>Spring Boot Starter module for the AMQP Extension of Axon Framework</description>
