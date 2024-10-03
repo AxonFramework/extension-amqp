@@ -1,5 +1,5 @@
 name: amqp-extension-reference
-title: Spring AMQP Reference Guide
+title: Spring AMQP Reference
 version: true
 prerelease: true
 start_page: ROOT:index.adoc
