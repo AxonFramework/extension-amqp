@@ -4,5 +4,11 @@ version: true
 prerelease: true
 start_page: ROOT:index.adoc
 
+asciidoc:
+  attributes:
+    component_description: Spring AMQP Reference Guide
+    type: reference
+    group: extension
+
 nav:
   - modules/nav.adoc
