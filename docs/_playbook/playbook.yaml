@@ -1,6 +1,6 @@
 site:
   title: Axon AMQP Extension docs PREVIEW
-  start_page: amqp_extension_guide::index.adoc
+  start_page: amqp-extension-reference::index.adoc
 
 content:
   sources:

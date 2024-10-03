@@ -3,7 +3,7 @@
 This folder contains the docs for the Axon Framework AMQP Extension. The docs in this folder are written as part of the [AxonIQ Library](https://library.axoniq.io), and they are [written in Ascii and built with Antora.](https://library.axoniq.io/contribution_guide/overview/platform.html)
 
 The following are the current documentation sources (folders):
-- `extension-guide` : [The Spring AMQP Extension guide from the former reference guide](https://library.axoniq.io/amqp_extension_guide/index.html)
+- `extension-guide` : [The Spring AMQP Extension guide from the former reference guide](https://docs.axoniq.io/amqp-extension-reference/index.html)
 
 ## Contributing to the docs.
 
