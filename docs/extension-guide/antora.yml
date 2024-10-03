@@ -7,8 +7,8 @@ start_page: ROOT:index.adoc
 asciidoc:
   attributes:
     component_description: Spring AMQP Reference Guide
-    type: reference
-    group: extension
+    type: extension-reference
+    group: axon-framework
 
 nav:
   - modules/nav.adoc
