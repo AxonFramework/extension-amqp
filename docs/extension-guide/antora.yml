@@ -6,7 +6,7 @@ start_page: ROOT:index.adoc
 
 asciidoc:
   attributes:
-    component_description: Spring AMQP Reference Guide
+    component_description: Extension adding AMQP support for event streaming
     type: extension-reference
     group: axon-framework
 
