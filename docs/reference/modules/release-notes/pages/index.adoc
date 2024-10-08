@@ -1,0 +1,19 @@
+= Release Notes AMQP Extension
+:navtitle: Release Notes
+
+The release notes section for the Axon AMQP Extension for all major/minor releases.
+[cols="2*", options="header"]
+|===========================================================
+| Release Type | Version
+| _**Major**_  | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_9[4.9]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_8[4.8]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_7[4.7]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_6[4.6]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_5[4.5]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_4[4.4]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_3[4.3]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_2[4.2]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_1[4.1]
+|              | xref:amqp-extension-reference:release-notes:major-releases.adoc#_release_4_0[4.0]
+| _**Minor**_  | xref:amqp-extension-reference:release-notes:minor-releases.adoc#_release_4_7[4.7]
+|===========================================================

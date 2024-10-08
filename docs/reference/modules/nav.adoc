@@ -2,3 +2,6 @@
 ** xref:ROOT:forwarding.adoc[]
 ** xref:ROOT:reading.adoc[]
 
+* xref:release-notes:index.adoc[]
+** xref:release-notes:major-releases.adoc[]
+** xref:release-notes:minor-releases.adoc[]
