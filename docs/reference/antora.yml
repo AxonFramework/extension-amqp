@@ -1,5 +1,5 @@
-name: amqp_extension_guide
-title: Spring AMQP Extension Guide
+name: amqp-extension-reference
+title: Spring AMQP Reference
 version:
   axon-amqp-(?<version>+({0..9}).+({0..9})).*: $<version>
   master: development
@@ -7,8 +7,8 @@ start_page: ROOT:index.adoc
 
 asciidoc:
   attributes:
-    component_description: The Spring AMQP Extension guide from the former reference guide
-    type: guide
+    component_description: Extension adding AMQP support for event streaming
+    type: extension-reference
     group: axon-framework
 
 nav:
