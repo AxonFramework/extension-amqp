@@ -1,5 +1,5 @@
-* xref:ROOT:index.adoc[]
-** xref:ROOT:forwarding.adoc[]
-** xref:ROOT:reading.adoc[]
 
-* xref::release-notes.adoc[]
+* xref:ROOT:forwarding.adoc[]
+* xref:ROOT:reading.adoc[]
+
+* xref:ROOT:release-notes.adoc[]
