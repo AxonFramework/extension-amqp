@@ -21,7 +21,7 @@ Release 4.8.0 only consists out of dependency upgrades to tag along with recent 
 
 === Contributors
 
-We'd like to thank all the contributors who worked on this release!
+We'd like to thank all the contributors who worked on this release:
 
 - [@gklijs](https://github.com/gklijs)
 
@@ -34,15 +34,15 @@ If you're curious about the dependency upgrades made in this release we refer to
 
 - Change how Sonar is invoked for GHAs [#162](https://github.com/AxonFramework/extension-amqp/pull/162)
 - Added an AMQP sample to show how to use the extension [#126](https://github.com/AxonFramework/extension-amqp/pull/126)
-- Splitted builds into pr and not pr, added ghactions to dependabot and other minors [#88](https://github.com/AxonFramework/extension-amqp/pull/88)
+- Splitted builds into pr and not pr, added ghactions to Dependabot and other minors [#88](https://github.com/AxonFramework/extension-amqp/pull/88)
 
-=== Bug Fixes
+=== Bugfixes
 
 - Precision on Date Time Utils [#94](https://github.com/AxonFramework/extension-amqp/issues/94)
 
 === Contributors
 
-We'd like to thank all the contributors who worked on this release!
+We'd like to thank all the contributors who worked on this release:
 
 - [@smcvb](https://github.com/smcvb)
 - [@lfgcampos](https://github.com/lfgcampos)
@@ -50,7 +50,7 @@ We'd like to thank all the contributors who worked on this release!
 [#_release_4_5]
 == Release 4.5
 
-* Issue [#5](https://github.com/AxonFramework/extension-amqp/pull/5) introduces dependabot.
+* Issue [#5](https://github.com/AxonFramework/extension-amqp/pull/5) introduces Dependabot.
 This updated a large amount of the versions used by this extension.
 
 * We updated all tests to a more current testing solution.
@@ -64,7 +64,7 @@ You can check [this](https://github.com/AxonFramework/extension-amqp/releases/ta
 
 * Issue [#3](https://github.com/AxonFramework/extension-amqp/pull/3) introduces support for Spring Boot Developer Tools.
 
-* We introduce dependabot, which updated the log4j version.
+* We introduce Dependabot, which updated the log4j version.
 
 [#_release_4_3]
 == Release 4.3

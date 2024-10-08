@@ -14,6 +14,6 @@ This page provides an overview of patch releases for the Axon AMQP Extension.
 
 ==== Contributors
 
-We'd like to thank all the contributors who worked on this release!
+We'd like to thank all the contributors who worked on this release:
 
 - [@gklijs](https://github.com/gklijs)
