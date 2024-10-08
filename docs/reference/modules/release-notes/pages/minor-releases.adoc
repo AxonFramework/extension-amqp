@@ -10,10 +10,10 @@ This page provides an overview of patch releases for the Axon AMQP Extension.
 
 ==== Enhancements
 
-- Fix coverage report, including the integration test module. [#321](https://github.com/AxonFramework/extension-amqp/pull/321)
+- Fix coverage report, including the integration test module. link:https://github.com/AxonFramework/extension-amqp/pull/321[#321]
 
 ==== Contributors
 
 We'd like to thank all the contributors who worked on this release:
 
-- [@gklijs](https://github.com/gklijs)
+- link:https://github.com/gklijs[@gklijs]
