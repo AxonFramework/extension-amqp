@@ -1,7 +1,8 @@
 name: amqp_extension_guide
 title: Spring AMQP Extension Guide
-version: true
-prerelease: true
+version:
+  axon-amqp-(?<version>+({0..9}).+({0..9})).*: $<version>
+  master: development
 start_page: ROOT:index.adoc
 
 asciidoc:
