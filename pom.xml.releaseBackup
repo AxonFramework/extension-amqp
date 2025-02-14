@@ -19,7 +19,7 @@
 
     <groupId>org.axonframework.extensions.amqp</groupId>
     <artifactId>axon-amqp-parent</artifactId>
-    <version>4.11.0</version>
+    <version>4.11.0-SNAPSHOT</version>
     <modules>
         <module>amqp</module>
         <module>amqp-spring-boot-autoconfigure</module>
@@ -465,7 +465,7 @@
         <connection>scm:git:git://github.com/AxonFramework/extension-amqp.git</connection>
         <developerConnection>scm:git:git@github.com:AxonFramework/extension-amqp.git</developerConnection>
         <url>https://github.com/AxonFramework/extension-amqp</url>
-        <tag>axon-amqp-4.11.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
