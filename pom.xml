@@ -317,6 +317,9 @@
                 <version>${central-publishing-maven-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <excludeArtifacts>
+                        amqp-axon-example
+                    </excludeArtifacts>
                     <publishingServerId>central</publishingServerId>
                 </configuration>
             </plugin>
