@@ -34,8 +34,8 @@
 
     <properties>
         <assertj.version>3.27.3</assertj.version>
-        <jackson.version>2.16.0</jackson.version>
-        <jackson-databind.version>2.16.0</jackson-databind.version>
+        <jackson.version>2.19.0</jackson.version>
+        <jackson-databind.version>2.19.0</jackson-databind.version>
     </properties>
 
     <dependencies>
